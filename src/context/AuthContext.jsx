@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
+  sendPasswordResetEmail,
+  updateProfile,
   signOut, 
   onAuthStateChanged 
 } from 'firebase/auth';
@@ -58,6 +60,27 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('health_disclaimer_accepted', 'true');
   };
 
+  const getFirebaseErrorMessage = (error) => {
+    if (!error || !error.code) return error?.message || 'Authentication operation failed.';
+    switch (error.code) {
+      case 'auth/invalid-email':
+        return 'Please enter a valid email address.';
+      case 'auth/user-not-found':
+        return 'No registered account found with this email.';
+      case 'auth/wrong-password':
+      case 'auth/invalid-credential':
+        return 'Invalid email or password. Please check your credentials.';
+      case 'auth/email-already-in-use':
+        return 'An account with this email address already exists.';
+      case 'auth/weak-password':
+        return 'Password should be at least 6 characters long.';
+      case 'auth/too-many-requests':
+        return 'Access disabled due to repeated failed attempts. Reset password or try again later.';
+      default:
+        return error.message.replace('Firebase: ', '');
+    }
+  };
+
   const login = async (email, password) => {
     setLoading(true);
     try {
@@ -69,8 +92,13 @@ export const AuthProvider = ({ children }) => {
         return loginAsDemo(email);
       }
     } catch (err) {
-      console.warn("Firebase auth failed, falling back to Demo Login:", err.message);
-      return loginAsDemo(email);
+      // If Firebase key is demo/invalid, fallback to demo mode safely
+      if (err.code === 'auth/api-key-not-valid' || err.message?.includes('API key')) {
+        console.warn("Firebase Auth fallback to Demo Mode:", err.message);
+        return loginAsDemo(email);
+      }
+      const formattedMessage = getFirebaseErrorMessage(err);
+      throw new Error(formattedMessage);
     } finally {
       setLoading(false);
     }
@@ -81,10 +109,17 @@ export const AuthProvider = ({ children }) => {
     try {
       if (auth && !email.endsWith('@demo.com')) {
         const res = await createUserWithEmailAndPassword(auth, email, password);
+        if (name && res.user) {
+          try {
+            await updateProfile(res.user, { displayName: name });
+          } catch (profileErr) {
+            console.warn("Could not update profile name:", profileErr);
+          }
+        }
         const userData = {
           uid: res.user.uid,
           email: res.user.email,
-          displayName: name || email.split('@')[0],
+          displayName: name || res.user.displayName || email.split('@')[0],
           isDemo: false
         };
         setUser(userData);
@@ -94,8 +129,36 @@ export const AuthProvider = ({ children }) => {
         return loginAsDemo(email, name);
       }
     } catch (err) {
-      console.warn("Firebase signup warning, using demo signup:", err.message);
-      return loginAsDemo(email, name);
+      if (err.code === 'auth/api-key-not-valid' || err.message?.includes('API key')) {
+        console.warn("Firebase Auth fallback to Demo Mode:", err.message);
+        return loginAsDemo(email, name);
+      }
+      const formattedMessage = getFirebaseErrorMessage(err);
+      throw new Error(formattedMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetPassword = async (email) => {
+    if (!email) {
+      throw new Error('Please enter your email address.');
+    }
+    setLoading(true);
+    try {
+      if (auth && !email.endsWith('@demo.com')) {
+        await sendPasswordResetEmail(auth, email);
+        return { success: true, message: 'Password reset link sent! Check your email inbox.' };
+      } else {
+        // Simulated success for demo mode emails
+        return { success: true, message: 'Demo mode: Password reset email link simulated successfully!' };
+      }
+    } catch (err) {
+      if (err.code === 'auth/api-key-not-valid' || err.message?.includes('API key')) {
+        return { success: true, message: 'Demo mode: Password reset link simulated successfully.' };
+      }
+      const formattedMessage = getFirebaseErrorMessage(err);
+      throw new Error(formattedMessage);
     } finally {
       setLoading(false);
     }
@@ -141,6 +204,7 @@ export const AuthProvider = ({ children }) => {
     acceptDisclaimer,
     login,
     signup,
+    resetPassword,
     loginAsDemo,
     logout
   };
@@ -151,3 +215,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+

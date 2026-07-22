@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { 
+import {
   Home,
-  LayoutDashboard, 
-  ClipboardList, 
-  Sparkles, 
-  TestTube2, 
-  User, 
+  LayoutDashboard,
+  ClipboardList,
+  Sparkles,
+  TestTube2,
+  User,
   ShieldCheck,
   TrendingDown,
   Flame
@@ -21,7 +21,7 @@ export default function Sidebar({ isOpen, onCloseMobile }) {
     { label: 'Home Page', path: '/', icon: Home },
     { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Health Assessment', path: '/assessment', icon: ClipboardList },
-    { label: 'AI Recommendations', path: '/recommendations', icon: Sparkles, badge: '7-Day Plan' },
+    { label: 'AI Regime', path: '/recommendations', icon: Sparkles, badge: '7-Day Plan' },
     { label: 'Lab Analytics', path: '/labs', icon: TestTube2 },
     { label: 'Profile & History', path: '/profile', icon: User },
   ];
@@ -30,7 +30,7 @@ export default function Sidebar({ isOpen, onCloseMobile }) {
     <>
       {/* Backdrop for mobile */}
       {isOpen && (
-        <div 
+        <div
           onClick={onCloseMobile}
           className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-30 lg:hidden"
         />
@@ -59,8 +59,8 @@ export default function Sidebar({ isOpen, onCloseMobile }) {
                     end={item.path === '/'}
                     className={({ isActive }) => `
                       flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200
-                      ${isActive 
-                        ? 'bg-gradient-to-r from-health-500/20 to-emerald-500/10 text-health-300 border border-health-500/30 shadow-sm' 
+                      ${isActive
+                        ? 'bg-gradient-to-r from-health-500/20 to-emerald-500/10 text-health-300 border border-health-500/30 shadow-sm'
                         : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'}
                     `}
                   >
@@ -106,7 +106,7 @@ export default function Sidebar({ isOpen, onCloseMobile }) {
               <span className="text-xs text-slate-400">/ 100</span>
             </div>
             <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-              <div 
+              <div
                 className="bg-gradient-to-r from-teal-400 to-emerald-400 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${metabolicScore}%` }}
               ></div>

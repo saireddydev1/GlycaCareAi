@@ -26,8 +26,8 @@ export default function RecommendationsPage() {
             onClick={() => setActiveTab('diet')}
             className={`
               px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2
-              ${activeTab === 'diet' 
-                ? 'bg-gradient-to-r from-health-500 to-emerald-500 text-white shadow-md shadow-health-500/20' 
+              ${activeTab === 'diet'
+                ? 'bg-gradient-to-r from-health-500 to-emerald-500 text-white shadow-md shadow-health-500/20'
                 : 'text-slate-400 hover:text-white'}
             `}
           >
@@ -39,8 +39,8 @@ export default function RecommendationsPage() {
             onClick={() => setActiveTab('yoga')}
             className={`
               px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2
-              ${activeTab === 'yoga' 
-                ? 'bg-gradient-to-r from-health-500 to-emerald-500 text-white shadow-md shadow-health-500/20' 
+              ${activeTab === 'yoga'
+                ? 'bg-gradient-to-r from-health-500 to-emerald-500 text-white shadow-md shadow-health-500/20'
                 : 'text-slate-400 hover:text-white'}
             `}
           >

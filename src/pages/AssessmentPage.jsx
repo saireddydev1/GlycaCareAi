@@ -13,21 +13,21 @@ export default function AssessmentPage() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(() => ({
-    age: healthData?.userProfile?.age || 38,
-    gender: healthData?.userProfile?.gender || 'Female',
-    weightKg: healthData?.userProfile?.weightKg || 74.5,
-    heightCm: healthData?.userProfile?.heightCm || 165,
-    activityLevel: 'Moderately Active',
-    fastingGlucose: healthData?.currentMetrics?.fastingGlucose?.value || 98,
-    fastingInsulin: healthData?.currentMetrics?.fastingInsulin?.value || 11.2,
-    alt: healthData?.currentMetrics?.alt?.value || 38,
-    ast: healthData?.currentMetrics?.ast?.value || 27,
-    triglycerides: healthData?.currentMetrics?.triglycerides?.value || 165,
-    hdl: healthData?.currentMetrics?.hdl?.value || 48,
-    fastingWindow: '14:10',
-    sleepHours: '7-8',
-    dietPreference: 'Mediterranean Low-GI',
-    nafldStatus: 'Diagnosed Stage 1 NAFLD'
+    age: '',
+    gender: '',
+    weightKg: '',
+    heightCm: '',
+    activityLevel: '',
+    fastingGlucose: '',
+    fastingInsulin: '',
+    alt: '',
+    ast: '',
+    triglycerides: '',
+    hdl: '',
+    fastingWindow: '',
+    sleepHours: '',
+    dietPreference: '',
+    nafldStatus: ''
   }));
 
   const updateForm = (fieldObj) => {

@@ -2,10 +2,11 @@ import React from 'react';
 import { ShieldCheck, Activity, TestTube2, HeartPulse, CheckCircle2, Sparkles } from 'lucide-react';
 
 export default function StepSummary({ formData, onComplete }) {
-  const glucose = parseFloat(formData.fastingGlucose || 98);
-  const insulin = parseFloat(formData.fastingInsulin || 11.2);
-  const homaIR = ((glucose * insulin) / 405).toFixed(2);
-  const alt = parseFloat(formData.alt || 38);
+  const glucose = parseFloat(formData.fastingGlucose) || null;
+  const insulin = parseFloat(formData.fastingInsulin) || null;
+  const homaIRVal = glucose && insulin ? ((glucose * insulin) / 405) : null;
+  const homaIRDisplay = homaIRVal !== null ? homaIRVal.toFixed(2) : '--';
+  const alt = parseFloat(formData.alt) || null;
 
   return (
     <div className="space-y-5 animate-fade-in">
@@ -25,9 +26,9 @@ export default function StepSummary({ formData, onComplete }) {
             <Activity className="w-3 h-3 text-health-400" />
             HOMA-IR Score
           </span>
-          <p className="text-xl font-extrabold text-white mt-1">{homaIR}</p>
-          <p className={`text-[10px] font-semibold ${homaIR > 1.9 ? 'text-amber-400' : 'text-emerald-400'}`}>
-            {homaIR > 1.9 ? 'Target: < 1.90' : 'Optimal'}
+          <p className="text-xl font-extrabold text-white mt-1">{homaIRDisplay}</p>
+          <p className={`text-[10px] font-semibold ${homaIRVal && homaIRVal > 1.9 ? 'text-amber-400' : 'text-emerald-400'}`}>
+            {homaIRVal === null ? 'Not provided' : homaIRVal > 1.9 ? 'Target: < 1.90' : 'Optimal'}
           </p>
         </div>
 
@@ -36,9 +37,9 @@ export default function StepSummary({ formData, onComplete }) {
             <TestTube2 className="w-3 h-3 text-health-400" />
             Liver ALT Enzyme
           </span>
-          <p className="text-xl font-extrabold text-white mt-1">{alt} <span className="text-xs font-normal text-slate-400">U/L</span></p>
-          <p className={`text-[10px] font-semibold ${alt > 30 ? 'text-amber-400' : 'text-emerald-400'}`}>
-            {alt > 30 ? 'Mildly Elevated' : 'Optimal'}
+          <p className="text-xl font-extrabold text-white mt-1">{alt !== null ? alt : '--'} <span className="text-xs font-normal text-slate-400">U/L</span></p>
+          <p className={`text-[10px] font-semibold ${alt && alt > 30 ? 'text-amber-400' : 'text-emerald-400'}`}>
+            {alt === null ? 'Not provided' : alt > 30 ? 'Mildly Elevated' : 'Optimal'}
           </p>
         </div>
 
@@ -47,8 +48,8 @@ export default function StepSummary({ formData, onComplete }) {
             <HeartPulse className="w-3 h-3 text-health-400" />
             Fasting Glucose
           </span>
-          <p className="text-xl font-extrabold text-white mt-1">{glucose} <span className="text-xs font-normal text-slate-400">mg/dL</span></p>
-          <p className="text-[10px] text-emerald-400 font-semibold">Normal Range</p>
+          <p className="text-xl font-extrabold text-white mt-1">{glucose !== null ? glucose : '--'} <span className="text-xs font-normal text-slate-400">mg/dL</span></p>
+          <p className="text-[10px] text-emerald-400 font-semibold">{glucose === null ? 'Not provided' : glucose > 100 ? 'Elevated' : 'Normal Range'}</p>
         </div>
       </div>
 

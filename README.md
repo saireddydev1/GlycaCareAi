@@ -183,5 +183,3 @@ GlycaCare AI is pre-configured for one-click deployment on **Vercel** with SPA r
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
-
-*Developed for Hackathon Submission — GlycaCare AI*
